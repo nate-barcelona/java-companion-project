@@ -21,7 +21,6 @@ public class HomeController {
 	public ModelAndView review() {
 		return new ModelAndView("review", "command", new ReviewImpl());
 	}
-
 	@RequestMapping(value = "/addReview", method = RequestMethod.POST)
 	public ModelAndView addReview(ReviewImpl reviewImpl, ModelMap model) {
 		if(reviewImpl.getAuthor().equals("")) {

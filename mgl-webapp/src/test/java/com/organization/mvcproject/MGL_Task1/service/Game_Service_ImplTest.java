@@ -1,6 +1,5 @@
 package com.organization.mvcproject.MGL_Task1.service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +24,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.organization.mvcproject.MGL_Task1.model.Game;
+import com.organization.mvcproject.api.model.Game;
+import com.organization.mvcproject.api.service.GameService;
 import com.organization.mvcproject.config.MvcConfiguration;
+import com.organization.mvcproject.model.GameImpl;
 
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
@@ -37,15 +38,15 @@ class Game_Service_ImplTest {
 	
 	
 	@Autowired
-	private Game_Service gameServiceUnderTest;
+	private GameService gameServiceUnderTest;
 	
 	private static Game testGame = createGame(1);
 	
 	private  static final String TEST_GENRE = "Test Genre";
-	private static Game createGame(Integer number) {
-		Game game = new Game();
-		 game.setGame_name("Testing Game Name " + String.valueOf(number));
-		 game.setGame_genre(TEST_GENRE);
+	private static GameImpl createGame(Integer number) {
+		GameImpl game = new GameImpl();
+		 game.setName("Testing Game Name " + String.valueOf(number));
+		 game.setGenre(TEST_GENRE);
 		 return game;
 	}
 	
@@ -56,10 +57,10 @@ class Game_Service_ImplTest {
 	void saveGameServiceSavesAndUpdatesGame() {
 		if(gamesToRemoveAfterTest.isEmpty()) {
 			Game game = gameServiceUnderTest.saveGame(testGame);
-			Assertions.assertNotNull(game.getGame_id());
+			Assertions.assertNotNull(game.getId());
 			
 			//updates 
-			game.setGame_name("Testing Game Name Updated" );
+			game.setName("Testing GameImpl Name Updated" );
 			testGame = gameServiceUnderTest.saveGame(game);
 			assertEquals(game, testGame);	
 			gamesToRemoveAfterTest.add(testGame);
