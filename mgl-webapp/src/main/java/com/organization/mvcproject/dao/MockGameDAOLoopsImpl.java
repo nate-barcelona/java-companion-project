@@ -1,19 +1,21 @@
-package com.organization.mvcproject.repository;
+package com.organization.mvcproject.dao;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.organization.mvcproject.model.Game;
+import com.organization.mvcproject.api.dao.MockGameDAO;
+import com.organization.mvcproject.api.model.Game;
+import com.organization.mvcproject.model.GameImpl;
 
 @Repository
-public class MockGameDAO {
+public class MockGameDAOLoopsImpl implements MockGameDAO {
 
 	
 	
 	private static Long gameId = new Long(0);
-	private static List<Game> games = new ArrayList<Game>();
+	private static List<Game> games = new ArrayList<>();
 
 	static {
 		games = populateGames();
@@ -21,17 +23,17 @@ public class MockGameDAO {
 
 	private static List<Game> populateGames() {
 
-		Game game1 = new Game();
+		GameImpl game1 = new GameImpl();
 		game1.setId(++gameId);
 		game1.setGenre("Sport");
 		game1.setName("Rocket League");
 
-		Game game2 = new Game();
+		GameImpl game2 = new GameImpl();
 		game2.setId(++gameId);
 		game2.setGenre("Shooter");
 		game2.setName("Halo 3");
 
-		Game game3 = new Game();
+		GameImpl game3 = new GameImpl();
 		game3.setId(++gameId);
 		game3.setGenre("MMORPG");
 		game3.setName("Runescape");
@@ -44,21 +46,36 @@ public class MockGameDAO {
 	}
 
 	public List<Game> retrieveAllGames() {
-		// TODO Auto-generated method stub
 		return games;
 	}
 	
 	
 
-	public Game saveGame(Game game) {
+public Game saveGame(Game game) {
+		
+		//perform update if game has a valid id
+		if(game.getId() != null) {
+			Game foundGame = findGameById(game.getId());
+			if(foundGame != null) {
+				for(int i = 0; i < games.size(); i++) {
+					if(game.getId().equals(games.get(i).getId())) {
+						games.set(i, game);
+						return findGameById(game.getId());
+					}
+				}
+			}
+		}
+		
+		//create a new game
 		game.setId(++gameId);
 		games.add(game);
+		
 		return game;
 	}
 	
-	public Game updateGame(Game game) {
+	/*public GameImpl updateGame(GameImpl game) {
 		if(game.getId() != null) {
-			Game foundGame = findGameById(game.getId());
+			GameImpl foundGame = findGameById(game.getId());
 				if(foundGame != null) {
 					for(int i = 0; i < games.size(); i++) {
 						if(game.getId().equals(games.get(i))) {
@@ -70,7 +87,7 @@ public class MockGameDAO {
 		}
 		return saveGame(game);
 	}
-	
+	*/
 	public Game findGameById(Long id) {
 		
 		for( Game game: games) {
@@ -89,5 +106,13 @@ public class MockGameDAO {
 		}
 		return false;
 	}
+
+	@Override
+	public List<Game> findGamesByGenre(String genre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	
 }
